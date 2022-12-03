@@ -1,0 +1,49 @@
+\usepackage{csquotes}
+
+\usepackage{hyperref}
+\hypersetup{bookmarksopenlevel=0}
+
+
+
+\usepackage{bookmark}
+
+
+\usepackage{./styles/biblatex-series-number-checks}
+
+
+\usepackage{./styles/eng-date,./styles/abbrev}
+
+
+
+
+% has to be loaded after forest-setup because of incompatibilities with the dg-style.
+% sorry folks, this has to be loaded. All this babel-shorthands stuff is way too complicated and
+% does not work for my abbreviations. It does not work in bibtex items since it is language dependent.
+\usepackage{german}\selectlanguage{USenglish}
+
+\usepackage{xspace}
+%% Typesetting of mathematical formulas
+\usepackage{amssymb} % has to be loaded before other stuff
+\usepackage{amsmath} % has to be loaded before mathspec/unicode-math
+
+    \usepackage{unicode-math}
+
+\usepackage{hyphenat}
+
+\usepackage{xcolor}
+\definecolor{lsDOIGray}{cmyk}{0,0,0,0.45}
+
+
+\ifxetex
+\usepackage{styles/eng-hyp-utf8}
+\else
+\usepackage{styles/eng-hyp}
+\fi
+
+
+
+
+
+
+
+
