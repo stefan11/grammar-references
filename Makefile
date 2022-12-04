@@ -6,7 +6,9 @@ all: grammar-references.pdf
 
 # currently this includes stmue.bib a subset of stuff in my biblio.bib that may not be included in other books.
 
-grammar.bib: ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/checked.bib ../GT/English/unchecked.bib ../HPSG-Handbook/localbibliography.bib ~/Documents/Dienstlich/Buecher/Editing-New/HPSG-proceedings/hpsg-proceedings.bib ../Germanic/germanic.bib ../Danish/danish.bib
+grammar.bib: ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/biblio.bib ../HPSG-Handbook/localbibliography.bib ~/Documents/Dienstlich/Buecher/Editing-New/HPSG-proceedings/hpsg-proceedings.bib ../Germanic/germanic.bib ../Danish/danish.bib
+	(cd ../../Bibliographien; make checked.bib)
+	(cd ../GT/English; make checked.bib)
 #       used before
 #	cat ../GT/English/gt.bib ../HPSG-Handbook/hpsg-handbook-bibliography.bib ../Germanic/germanic.bib ../Danish/danish-refs.bib ../Headless/stmue.bib ../Headless/localbibliography.bib > grammar.bib
 # alles
@@ -25,9 +27,12 @@ grammar-references.pdf: grammar.bib
 
 
 install:
-	cp -p ${STYLE-PATH}abbrev.sty                      styles/
+	cp -p ${STYLE-PATH}abbrev.sty                        styles/
 	cp -p ${STYLE-PATH}eng-date.sty                      styles/
 	cp -p ${STYLE-PATH}eng-hyp-utf8.sty                  styles/
+
+checked.bib: grammar.bib
+	../../Bibliographien/extract-checked-items grammar.bib
 
 clean:
 	rm -f *.bak *~ *.log *.blg *.bbl *.aux *.toc *.cut *.out *.tpm *.adx *.idx *.ilg *.ind \
