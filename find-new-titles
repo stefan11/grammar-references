@@ -1,0 +1,79 @@
+#!/usr/local/bin/perl
+#
+# CC-BY Stefan Müller (HU Berlin)
+#
+
+
+#use strict;
+use warnings;
+
+use Text::BibTeX;
+ 
+#use utf8;
+
+
+my $bibfile1 = Text::BibTeX::File->new(shift @ARGV);
+
+
+#my $checkedfile = Text::BibTeX::File->new(">checked.bib");
+my $new_file = Text::BibTeX::File->new(">new.bib");
+
+
+
+#binmode(STDOUT, ":utf8");
+ 
+#my entry;
+
+#@entries = ();
+
+my %seen;
+
+while ($entry1 = Text::BibTeX::Entry->new($bibfile1))
+{
+   next unless $entry1->parse_ok;
+
+   #print $entry->get('title'); print "\n";
+ 
+   #push(@entries, ($title));
+
+if ($entry1->exists ('title')) {
+   $title = normalize_title($entry1->get('title'));
+   $seen{$title}++;
+} 
+
+}
+
+my $bibfile2 = Text::BibTeX::File->new(shift @ARGV);
+
+
+while ($entry2 = Text::BibTeX::Entry->new($bibfile2))
+{
+   next unless $entry2->parse_ok;
+
+   #print $entry->get('title'); print "\n";
+ 
+   #push(@entries, ($title));
+
+   if ($entry2->exists ('title')) {
+       $title = normalize_title($entry2->get('title'));
+     if (!$seen{$title}) {
+      $entry2->set_key($entry2->key . "hpsg-bib"); #new name space
+      $entry2->write ($new_file);
+     }
+ }
+
+
+}
+
+
+sub normalize_title {
+  local($string) = @_;
+
+  $string =~ s/\\emph//g;
+
+  $string =~ s/"=/-/g;
+
+  $string =~ s/[\{\}\$#@~!&*()\[\];.,:?^ `\\\/]+//g;
+
+  return lc $string;
+}
