@@ -71,7 +71,13 @@ sub normalize_title {
 
   $string =~ s/\\emph//g;
 
+  $string =~ s/\\textsc//g;
+
   $string =~ s/"=/-/g;
+
+  $string =~ s/-//g;
+
+  $string =~ s/ //g;
 
   $string =~ s/[\{\}\$#@~!&*()\[\];.,:?^ `\\\/]+//g;
 
