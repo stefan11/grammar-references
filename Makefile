@@ -36,6 +36,15 @@ expanded-grammar.bib: ../../Bibliographien/biblio-xdata-en.bib ../../Bibliograph
 	biber --tool --no-default-datamodel --configfile=clean-bib-biber-tool.conf --output-resolve --output-field-replace=location:address,journaltitle:journal expanded-grammar.bib
 	mv expanded-grammar_bibertool.bib expanded-grammar.bib
 
+zotero-import-grammar.bib: expanded-grammar.bib
+	sed 's|\\emph{\([^}]*\)}|<i>\1</i>|g' expanded-grammar.bib |\
+	sed 's|\\textsc{\([^}]*\)}|<span style="font-variant:small-caps;">\1</span>|g' |\
+	sed 's|\\hyp |-|g' |\
+	sed 's|""||g' |\
+	sed 's|"\`|„|g' |\
+	sed "s|\"\'|“|g" |\
+	sed 's|\\slash |/|g'>zotero-import-grammar.bib
+
 
 
 todo-bib.unique.txt: grammar-references.bcf
@@ -62,6 +71,12 @@ clean:
 	*.wdv *.xdv chapters/*.aux *.aux.copy *-blx.bib *.auxlock *.bcf *.mw *.run.xml *.backup \
 	chapters/*.aux chapters/*.log chapters/*.aux.copy chapters/*.old chapters/*~ chapters/*.bak chapters/*.backup \
 	langsci/*/*.aux langsci/*/*~ langsci/*/*.bak langsci/*/*.backup \
+
+
+test:
+# regexp takes everything till the next bracket
+	sed -i.backup 's|\\emph{\([^}]*\)}|<i>\1</i>|g' test.bib
+	sed -i.backup 's|\\textsc{\([^}]*\)}|<span style="font-variant:small-caps;">\1</span>|g' test.bib
 
 
 biber-clean:
