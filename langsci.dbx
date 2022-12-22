@@ -48,6 +48,7 @@
    bdsk-file-3,
    date-added,
    date-modified,
+   drop,
    read}
 \DeclareDatamodelEntryfields{
    bdsk-url-1,
@@ -57,6 +58,7 @@
    bdsk-file-3,
    date-added,
    date-modified,
+   drop,
    read}
 
 % opt fields
