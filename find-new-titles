@@ -1,4 +1,5 @@
-#!/usr/local/bin/perl
+#!/opt/homebrew/bin/perl
+#/usr/local/bin/perl
 #
 # CC-BY Stefan Müller (HU Berlin)
 #

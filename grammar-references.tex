@@ -25,7 +25,9 @@
 	autolang=hyphen,
 	language=english,
 	backend=biber,
-	indexing=cite
+%	indexing=cite
+	indexing=true  % this adds all occurances to the index. even those in the references. This
+                       % way one can use the index for checking.
 ]{biblatex}
 
 % If the user provided a shortauthor in the bibtex entry, we use the authentic author (as with the
@@ -65,6 +67,65 @@
 \widowpenalty\@M
 }
 {}{}
+
+\usepackage{index} %% Wie im Stylefile, aber ohne \MakeUppercase
+% \renewenvironment{theindex}{%
+%   \edef\indexname{\the\@nameuse{idxtitle@\@indextype}}%
+%   \if@twocolumn
+% 	  \@restonecolfalse
+%   \else
+% 	  \@restonecoltrue
+%   \fi
+%   \columnseprule \z@
+%   \columnsep 35\p@
+%   \twocolumn[%
+% 	  \@makeschapterhead{\indexname}%
+% 	  \ifx\index@prologue\@empty\else
+% 		  \index@prologue
+% 		  \bigskip
+% 	  \fi
+%   ]%        \@mkboth{\MakeUppercase\indexname}%                {\MakeUppercase\indexname}%
+%   \@mkboth{\indexname}%
+% 		  {\indexname}%
+%   \thispagestyle{plain}%
+%   \parindent\z@
+%   \parskip\z@ \@plus .3\p@\relax
+%   \let\item\@idxitem
+%   \providecommand*\seealso[2]{\emph{\lsSeeAlsoTerm{}} ##1}
+% }{%
+%   \if@restonecol
+% 	  \onecolumn
+%   \else
+% 	  \clearpage
+%   \fi
+% }
+
+	\makeindex
+	\renewindex{default}{adx}{and}{Name index} %biblatex can only deal with the default index
+
+\DeclareCiteCommand{\citetitle}
+  {\boolfalse{citetracker}%
+   \boolfalse{pagetracker}%
+   \usebibmacro{prenote}}
+  {\ifciteindex
+     {\indexnames{labelname}}
+     {}%
+   \printfield[citetitle]{labeltitle}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\citetitle}
+  {\boolfalse{citetracker}%
+   \boolfalse{pagetracker}%
+   \usebibmacro{prenote}}
+  {\ifciteindex
+     {\indexnames{labelname}}
+     {}%
+   \printfield[citetitle]{title}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+
 
 
     \usepackage{fontspec}
@@ -218,7 +279,7 @@ editors are recorded on papers. So for the publication of the HPSG handbook we m
 (!) references. I also checked all the references in my grammatical theory text book although I
 believed that the quality of those was quite good. I found mistakes \ldots.
 
-So this document is a printout of the BibTeX databases of the respective books in the Generic Style
+So this document is a printout of the \hologo{BibTeX} databases of the respective books in the Generic Style
 Sheet for Linguistics in the version used by Language Science Press. 
 \input{count.txt} items, \pageref{lastpage} pages.
 I hope it is useful.
@@ -234,5 +295,21 @@ I want to thank Elisabeth Eberle, Luisa Kalvelage, and David Müller for help wi
 \printbibliography
 
 \label{lastpage}
+
+\cleardoublepage
+
+\small
+   
+
+\phantomsection%this allows hyperlink in ToC to work
+\addcontentsline{toc}{chapter}{Index} 
+\addcontentsline{toc}{section}{Name index}
+%\ohead{Name index}
+%with biblatex
+%\printindex
+%without it 
+\sloppy
+\printindex 
+
 
 \end{document}

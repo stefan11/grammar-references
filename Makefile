@@ -4,7 +4,8 @@ STYLE-PATH= ${HOME}/Library/texmf/tex/latex/
 all: grammar-references.pdf
 
 
-# currently this includes stmue.bib a subset of stuff in my biblio.bib that may not be included in other books.
+# The following creates checked.bib in Biliographien to include all items from my bib that are checked.
+# It then adds all items from book projects I was involved in (Headless, Danish, HPSG-Handbook, HPSG-Proceedings).
 
 grammar.bib: ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/biblio.bib ../HPSG-Handbook/localbibliography.bib ~/Documents/Dienstlich/Buecher/Editing-New/HPSG-proceedings/hpsg-proceedings.bib ../Germanic/germanic.bib ../Danish/danish.bib
 	(cd ../../Bibliographien; make checked.bib)
@@ -12,7 +13,8 @@ grammar.bib: ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/bibli
 #       used before
 #	cat ../GT/English/gt.bib ../HPSG-Handbook/hpsg-handbook-bibliography.bib ../Germanic/germanic.bib ../Danish/danish-refs.bib ../Headless/stmue.bib ../Headless/localbibliography.bib > grammar.bib
 # alles
-	cat ../../Bibliographien/bib-abbr.bib ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/checked.bib ../GT/English/unchecked.bib ../HPSG-Handbook/localbibliography.bib ~/Documents/Dienstlich/Buecher/Editing-New/HPSG-proceedings/hpsg-proceedings.bib ../Danish/danish.bib ../Headless/localbibliography.bib > grammar_tmp.bib
+	cat ../../Bibliographien/bib-abbr.bib ../../Bibliographien/biblio-xdata-en.bib ../../Bibliographien/checked.bib ../HPSG-Handbook/localbibliography.bib ~/Documents/Dienstlich/Buecher/Editing-New/HPSG-proceedings/hpsg-proceedings.bib ../Danish/danish.bib ../Headless/localbibliography.bib > grammar_tmp.bib
+# hpsg_bib.bib is the list of references from the HPSG Bibliography in the web. Script prints BibTeX-entries for unknown titles into new.bib.
 	find-new-titles grammar_tmp.bib hpsg_bib.bib
 	cat grammar_tmp.bib new.bib > grammar.bib
 	biber --tool --no-default-datamodel --configfile=clean-bib-biber-tool.conf --output-field-replace=location:address,journaltitle:journal grammar.bib
@@ -54,6 +56,23 @@ grammar-references.pdf: grammar.bib
 	grep @ grammar.bib | egrep -v "string|xdata" | wc -l > count.txt
 	xelatex grammar-references
 	biber grammar-references
+	xelatex grammar-references
+	sed -i.backup 's/\\MakeCapital //g' *.adx
+	sed -i.backup 's/.*Group.*//' *.adx
+	python3 fixindex.py $*.adx
+	mv $*mod.adx $*.adx
+	makeindex -gs index.format-plus -o $*.and $*.adx
+	xelatex grammar-references
+
+
+index:
+	xelatex grammar-references
+	sed -i.backup s/.*\\emph.*// grammar-references.adx
+	sed -i.backup 's/\\MakeCapital //g' *.adx
+	sed -i.backup 's/.*Group.*//' *.adx
+	python3 fixindex.py grammar-references.adx
+	mv grammar-referencesmod.adx grammar-references.adx
+	makeindex -gs index.format-plus -o grammar-references.and grammar-references.adx
 	xelatex grammar-references
 
 
